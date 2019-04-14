@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ldd.springboot.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ldd.springboot.entity.User">
+        <id column="USER_ID" property="userId" />
+        <result column="USER_NUM" property="userNum" />
+        <result column="USER_NAME" property="userName" />
+        <result column="PASSWORD" property="password" />
+        <result column="SALT" property="salt" />
+        <result column="ROLE_ID" property="roleId" />
+        <result column="ASSIST_ROLES" property="assistRoles" />
+        <result column="LOG_POWER" property="logPower" />
+        <result column="SEX" property="sex" />
+        <result column="TELEPHONE" property="telephone" />
+        <result column="ID_CARD_NO" property="idCardNo" />
+        <result column="CREATE_TIME" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        USER_ID, USER_NUM, USER_NAME, PASSWORD, SALT, ROLE_ID, ASSIST_ROLES, LOG_POWER, SEX, TELEPHONE, ID_CARD_NO, CREATE_TIME
+    </sql>
+
+    <select id="findByname" resultType="com.ldd.springboot.entity.User">
+        select <include refid="Base_Column_List"/> from user
+        where USER_NAME=#{username}
+    </select>
+
+</mapper>
