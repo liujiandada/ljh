@@ -1,5 +1,7 @@
 package com.ldd.springboot.entity.vo;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -9,6 +11,7 @@ import javax.validation.constraints.NotNull;
  * @Copyright 版权所有 (c) www.javalsj.com
  * @memo 备注信息
  */
+@Data
 public class VueLoginInfoVo {
 
     @NotNull(message="用户名不允许为空")
@@ -17,20 +20,10 @@ public class VueLoginInfoVo {
     @NotNull(message="密码不允许为空")
     private String password;
 
-    public String getUsername() {
-        return username;
-    }
+    /**
+     * 记住密码
+     */
+    private boolean remember = false;
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>用户登录</title>
+    <link rel="stylesheet" type="text/css" media="all" href="../../webapp/static/css/style.css" th:href="@{/static/css/style.css}"/>
+    <script type="text/javascript" src="../js/jquery/jquery-1.9.1.js" th:src="@{/static/js/jquery/jquery-1.9.1.js}"/>
+    <script type="text/javascript" src="../../webapp/static/js/thymeleaf.js" th:src="@{/static/js/thymeleaf.js}"></script>
+
+</head>
+<body>
+
+<div  class="showing">
+<p>用户名:<input type="text" name="username"></p>
+<p>密码:<input type="password" name="password"></p>
+<p><input type="submit"  value="提交"/></p>
+</div>
+
+<script>
+    $("input[type='submit']").click(function(){
+        $.ajax({
+            url:'/login',
+            dataType:'json',
+            contentType : 'application/json',
+            type:'post',
+            data:JSON.stringify({username:$('input[name="username"]').val(),password:$('input[name="password"]').val()}),
+            success:function(res){
+                var code=res.code;
+                if(code==200){
+                    window.location.href="/index";
+                }
+            }
+        })
+    })
+</script>
+</body>
+
+
+</html>
+
+

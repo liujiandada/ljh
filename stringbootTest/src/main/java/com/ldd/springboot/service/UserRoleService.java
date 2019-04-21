@@ -1,6 +1,6 @@
 package com.ldd.springboot.service;
 
-import com.ldd.springboot.entity.User;
+import com.ldd.springboot.entity.UserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author liujian
- * @since 2019-04-09
+ * @since 2019-04-20
  */
-public interface UserService extends IService<User> {
+public interface UserRoleService extends IService<UserRole> {
 
 }

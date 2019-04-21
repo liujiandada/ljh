@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ldd.springboot.mapper.SysPermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ldd.springboot.entity.SysPermission">
+        <id column="PERM_ID" property="permId" />
+        <result column="PERM_NAME" property="permName" />
+        <result column="RESOURCE_TYPE" property="resourceType" />
+        <result column="ICON" property="icon" />
+        <result column="URL" property="url" />
+        <result column="ROUTE_URL" property="routeUrl" />
+        <result column="PERMISSION" property="permission" />
+        <result column="PARENT_ID" property="parentId" />
+        <result column="SORT_NO" property="sortNo" />
+        <result column="AVAILABLE" property="available" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        PERM_ID, PERM_NAME, RESOURCE_TYPE, ICON, URL, ROUTE_URL, PERMISSION, PARENT_ID, SORT_NO, AVAILABLE
+    </sql>
+
+</mapper>

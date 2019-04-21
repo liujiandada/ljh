@@ -1,66 +1,102 @@
 package com.ldd.springboot.shiro;
 
-import com.ldd.springboot.entity.SysPermission;
-import com.ldd.springboot.entity.SysRole;
-import com.ldd.springboot.entity.User;
-import com.ldd.springboot.entity.UserInfo;
-import com.ldd.springboot.service.UserInfoService;
+import com.ldd.springboot.entity.*;
+import com.ldd.springboot.mapper.RolePermissionMapper;
+import com.ldd.springboot.mapper.SysPermissionMapper;
+import com.ldd.springboot.mapper.SysRoleMapper;
+import com.ldd.springboot.mapper.UserRoleMapper;
 import com.ldd.springboot.service.impl.UserServiceImpl;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/12/11.
- * 自定义权限匹配和账号密码匹配
+ *
  */
 public class MyShiroRealm extends AuthorizingRealm {
-    @Resource
+
+    @Autowired
     private UserServiceImpl userService;
+
+    @Resource
+    private RolePermissionMapper rolePermissionMapper;
+
+    @Resource
+    private UserRoleMapper userRoleMapper;
+
+    @Resource
+    private SysRoleMapper sysRoleMapper;
+
+    @Resource
+    private SysPermissionMapper sysPermissionMapper;
+
+
+    @Override
+    public String getName() {
+        return "MyShiroRealm";
+    }
+
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-//        System.out.println("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        UserInfo userInfo = (UserInfo) principals.getPrimaryPrincipal();
-        for (SysRole role : userInfo.getRoleList()) {
-            authorizationInfo.addRole(role.getRole());
-            for (SysPermission p : role.getPermissions()) {
-                authorizationInfo.addStringPermission(p.getPermission());
+        User user = (User) principals.getPrimaryPrincipal();
+        List<UserRole> userRoleList= userRoleMapper.findByUserId(user.getUserId());
+        for (UserRole userRole : userRoleList){
+            int roleId=userRole.getRoleId();
+            SysRole sysRole=sysRoleMapper.selectById(roleId);
+            authorizationInfo.addRole(sysRole.getRoleName());
+            List<RolePermission> rolePermissionList = rolePermissionMapper.findByRoleId(userRole.getRoleId());
+            for (RolePermission rolePermission : rolePermissionList){
+                int permId = rolePermission.getPermId();
+                SysPermission sysPermission=sysPermissionMapper.selectById(permId);
+                authorizationInfo.addStringPermission(sysPermission.getPermission());
             }
         }
         return authorizationInfo;
     }
 
-    /*主要是用来进行身份认证的，也就是说验证用户输入的账号和密码是否正确。*/
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
             throws AuthenticationException {
-//        System.out.println("MyShiroRealm.doGetAuthenticationInfo()");
-        //获取用户的输入的账号.
-        String username = (String) token.getPrincipal();
-//        System.out.println(token.getCredentials());
-        //通过username从数据库中查找 User对象，如果找到，没找到.
-        //实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
+
+        String username = (String)token.getPrincipal();
+
         User user = userService.findByUsername(username);
-//        System.out.println("----->>userInfo="+userInfo);
-        if (user == null) {
-            return null;
+
+        if (user == null) { //用户不存在
+            throw new AuthenticationException();
         }
-//        if (user.getState() == 1) { //账户冻结
-//            throw new LockedAccountException();
-//        }
+        if ("1".equals(user.getLogPower().trim())) { //禁止登录网页端
+            throw new LockedAccountException();
+        }
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
                 user, //用户名
                 user.getPassword(), //密码
-                ByteSource.Util.bytes(user.getSalt()),//salt=username+salt
-                getName()  //realm name
+                ByteSource.Util.bytes(user.getSalt()),
+                getName()
         );
         return authenticationInfo;
     }
+
+    /**
+     * 重置用户权限信息
+     * @param username
+     */
+    public void removeUserAuthorizationInfoCache(String username) {
+        SimplePrincipalCollection pc = new SimplePrincipalCollection();
+        pc.add(username, super.getName());
+        super.clearCachedAuthorizationInfo(pc);
+    }
+
 
 }
