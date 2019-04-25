@@ -13,11 +13,12 @@
         USER_ID, ROLE_ID
     </sql>
 
-    <select id="findByUserId" resultType="com.ldd.springboot.entity.UserRole" parameterType="Integer">
+    <select id="findByUserId" resultType="com.ldd.springboot.entity.UserRole" parameterType="Long">
         SELECT ur.USER_ID, ur.ROLE_ID
         FROM user_role ur
         LEFT JOIN user u on u.USER_ID = ur.USER_ID
         LEFT JOIN sys_role sr ON sr.ROLE_ID = ur.ROLE_ID
         WHERE ur.USER_ID=#{userId}
     </select>
+
 </mapper>

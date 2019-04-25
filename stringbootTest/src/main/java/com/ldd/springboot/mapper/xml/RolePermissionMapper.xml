@@ -13,7 +13,7 @@
         ROLE_ID, PERM_ID
     </sql>
 
-    <select id="findByRoleId" resultType="com.ldd.springboot.entity.RolePermission" parameterType="Integer">
+    <select id="findByRoleId" resultType="com.ldd.springboot.entity.RolePermission" parameterType="Long">
         SELECT rp.ROLE_ID, rp.PERM_ID
         FROM role_permission rp
         LEFT JOIN sys_role sr ON sr.ROLE_ID = rp.ROLE_ID

@@ -13,15 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  用户表 前端控制器
+ * 用户表 前端控制器
  * </p>
  *
  * @author liujian
- * @since 2019-04-09
+ * @since 2019-04-25
  */
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
     @Autowired
     UserService userService;
     @RequestMapping(value = "/addUser", method = RequestMethod.GET)
@@ -37,4 +38,6 @@ public class UserController {
             e.printStackTrace();
         }
     }
+
+
 }

@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author liujian
- * @since 2019-04-20
+ * @since 2019-04-25
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -23,9 +23,10 @@ public class UserRole implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId("USER_ID")
-    private Integer userId;
+    private Long userId;
 
     @TableField("ROLE_ID")
-    private Integer roleId;
+    private Long roleId;
+
 
 }

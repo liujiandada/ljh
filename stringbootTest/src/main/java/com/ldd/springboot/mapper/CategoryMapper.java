@@ -1,9 +1,9 @@
-package com.ldd.springboot.dao;
-
-import java.util.List;
+package com.ldd.springboot.mapper;
 
 import com.ldd.springboot.entity.Category;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface CategoryMapper {

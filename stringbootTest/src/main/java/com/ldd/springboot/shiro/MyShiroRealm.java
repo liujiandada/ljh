@@ -52,12 +52,12 @@ public class MyShiroRealm extends AuthorizingRealm {
         User user = (User) principals.getPrimaryPrincipal();
         List<UserRole> userRoleList= userRoleMapper.findByUserId(user.getUserId());
         for (UserRole userRole : userRoleList){
-            int roleId=userRole.getRoleId();
+            Long roleId=userRole.getRoleId();
             SysRole sysRole=sysRoleMapper.selectById(roleId);
             authorizationInfo.addRole(sysRole.getRoleName());
             List<RolePermission> rolePermissionList = rolePermissionMapper.findByRoleId(userRole.getRoleId());
             for (RolePermission rolePermission : rolePermissionList){
-                int permId = rolePermission.getPermId();
+                Long permId = rolePermission.getPermId();
                 SysPermission sysPermission=sysPermissionMapper.selectById(permId);
                 authorizationInfo.addStringPermission(sysPermission.getPermission());
             }

@@ -1,8 +1,9 @@
 package com.ldd.springboot.service.impl;
 
-import com.ldd.springboot.dao.CategoryMapper;
 import com.ldd.springboot.entity.Category;
+import com.ldd.springboot.mapper.CategoryMapper;
 import com.ldd.springboot.service.CategoryService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

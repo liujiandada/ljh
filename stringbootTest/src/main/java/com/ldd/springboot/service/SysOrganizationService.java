@@ -1,16 +1,16 @@
 package com.ldd.springboot.service;
 
-import com.ldd.springboot.entity.UserRole;
+import com.ldd.springboot.entity.SysOrganization;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- *  服务类
+ * 组织机构表 服务类
  * </p>
  *
  * @author liujian
  * @since 2019-04-25
  */
-public interface UserRoleService extends IService<UserRole> {
+public interface SysOrganizationService extends IService<SysOrganization> {
 
 }

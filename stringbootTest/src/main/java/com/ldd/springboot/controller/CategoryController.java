@@ -3,6 +3,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ldd.springboot.entity.Category;
 import com.ldd.springboot.service.CategoryService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,7 @@ public class CategoryController {
     CategoryService categoryService;
 
     @RequestMapping("/listCategory")
-
+    @RequiresPermissions("list:All")
     public String listCategory(Model m,@RequestParam(value = "start", defaultValue = "1") int start,@RequestParam(value = "size", defaultValue = "5") int size) throws Exception {
         PageHelper.startPage(start,size,"id desc");
         List<Category> cs=categoryService.list(start,size,"id desc");

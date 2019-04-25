@@ -12,13 +12,14 @@
         <result column="ROUTE_URL" property="routeUrl" />
         <result column="PERMISSION" property="permission" />
         <result column="PARENT_ID" property="parentId" />
+        <result column="PARENT_IDS" property="parentIds" />
         <result column="SORT_NO" property="sortNo" />
         <result column="AVAILABLE" property="available" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        PERM_ID, PERM_NAME, RESOURCE_TYPE, ICON, URL, ROUTE_URL, PERMISSION, PARENT_ID, SORT_NO, AVAILABLE
+        PERM_ID, PERM_NAME, RESOURCE_TYPE, ICON, URL, ROUTE_URL, PERMISSION, PARENT_ID, PARENT_IDS, SORT_NO, AVAILABLE
     </sql>
 
 </mapper>

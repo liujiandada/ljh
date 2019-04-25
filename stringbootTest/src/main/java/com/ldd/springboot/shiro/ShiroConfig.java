@@ -1,8 +1,10 @@
 package com.ldd.springboot.shiro;
 import com.ldd.springboot.exception.MyExceptionHandler;
+import com.ldd.springboot.filter.URLPathMatchingFilter;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -34,6 +36,11 @@ public class ShiroConfig {
     private String password;
 
     @Bean
+    public static LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+
+    @Bean
     public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
         System.out.println("ShiroConfiguration.shirFilter()");
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -61,6 +68,11 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
 
+    }
+
+    @Bean
+    public URLPathMatchingFilter getURLPathMatchingFilter() {
+        return new URLPathMatchingFilter();
     }
 
     /**
@@ -94,7 +106,7 @@ public class ShiroConfig {
         // 自定义session管理 使用redis
         securityManager.setSessionManager(sessionManager());
         // 自定义缓存实现 使用redis
-//        securityManager.setCacheManager(cacheManager());
+        securityManager.setCacheManager(cacheManagers());
         return securityManager;
     }
 
@@ -113,6 +125,7 @@ public class ShiroConfig {
      *
      * @return
      */
+    @Bean
     public RedisManager redisManager() {
         RedisManager redisManager = new RedisManager();
         redisManager.setHost(host);
@@ -131,9 +144,12 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public RedisCacheManager cacheManager() {
+    public RedisCacheManager cacheManagers() {
+
         RedisCacheManager redisCacheManager = new RedisCacheManager();
+        redisCacheManager.setPrincipalIdFieldName("userId");
         redisCacheManager.setRedisManager(redisManager());
+        redisCacheManager.setExpire(1800); //过期时间
         return redisCacheManager;
     }
 
