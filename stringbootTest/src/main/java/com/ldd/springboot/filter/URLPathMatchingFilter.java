@@ -1,11 +1,13 @@
 package com.ldd.springboot.filter;
 
+import com.ldd.springboot.service.SysPermissionService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.PathMatchingFilter;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -14,32 +16,33 @@ import java.util.Set;
 
 //FormAuthenticationFilter
 
-public class URLPathMatchingFilter extends PathMatchingFilter {
+public class URLPathMatchingFilter extends FormAuthenticationFilter {
+
+    @Autowired
+    SysPermissionService sysPermissionService ;
 
     @Override
     public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue)
             throws Exception {
         String requestURI = getPathWithinApplication(request);
 
-//		System.out.println("requestURI:" + requestURI);
+		System.out.println("requestURI:" + requestURI);
 
         Subject subject = SecurityUtils.getSubject();
         // 如果没有登录，就跳转到登录页面
         if (!subject.isAuthenticated()) {
-            WebUtils.issueRedirect(request, response, "/login");
+//            WebUtils.issueRedirect(request, response, "/login");
             return false;
         }
 
-        // 看看这个路径权限里有没有维护，如果没有维护，一律不放行(也可以改为一律放行)
-//        boolean needInterceptor = syspermissionService.needInterceptor(requestURI);
-        boolean needInterceptor = false;
+        // 看看这个路径权限里有没有维护，如果没有维护，一律放行
+        boolean needInterceptor = sysPermissionService.needInterceptor(requestURI);
         if (!needInterceptor) {
             return true;
         } else {
             boolean hasPermission = false;
             String userName = subject.getPrincipal().toString();
-//            Set<String> permissionUrls = syspermissionService.listPermissionURLs(userName);
-            Set<String> permissionUrls = new HashSet<>();
+            Set<String> permissionUrls = sysPermissionService.listPermissionURLByName(userName);
             for (String url : permissionUrls) {
                 // 这就表示当前用户有这个权限
                 if (url.equals(requestURI)) {

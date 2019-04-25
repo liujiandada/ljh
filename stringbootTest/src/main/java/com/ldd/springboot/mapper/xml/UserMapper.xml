@@ -22,7 +22,7 @@
         USER_ID, USER_NUM, USER_NAME, PASSWORD, SALT, ORG_ID, LOG_POWER, SEX, TELEPHONE, CREATE_TIME, LOCKED
     </sql>
 
-    <select id="findByname" resultType="com.ldd.springboot.entity.User">
+    <select id="findByUserName" resultType="com.ldd.springboot.entity.User">
         select <include refid="Base_Column_List"/> from user
         where USER_NAME=#{username}
     </select>

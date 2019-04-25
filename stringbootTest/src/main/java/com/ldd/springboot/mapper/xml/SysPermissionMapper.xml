@@ -22,4 +22,13 @@
         PERM_ID, PERM_NAME, RESOURCE_TYPE, ICON, URL, ROUTE_URL, PERMISSION, PARENT_ID, PARENT_IDS, SORT_NO, AVAILABLE
     </sql>
 
+    <select id="selectByUrl" resultType="com.ldd.springboot.entity.SysPermission" parameterType="string">
+        SELECT <include refid="Base_Column_List"/> FROM
+        sys_permission
+        WHERE URL IN
+        <foreach collection="array" index="index" item="urls" open="(" separator="," close=")">
+            #{urls}
+        </foreach>
+    </select>
+
 </mapper>

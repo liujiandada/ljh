@@ -14,5 +14,13 @@
     <sql id="Base_Column_List">
         ROLE_ID, ROLE_NAME, DESCRIPTION, AVAILABLE
     </sql>
+    <select id="listSysRoleByRoleIds" resultType="com.ldd.springboot.entity.SysRole">
+      SELECT <include refid="Base_Column_List"/>
+        FROM sys_role
+        WHERE ROLE_ID IN
+        <foreach collection="array" index="roleIds" item="urls" open="(" separator="," close=")">
+            #{roleIds}
+        </foreach>
+    </select>
 
 </mapper>

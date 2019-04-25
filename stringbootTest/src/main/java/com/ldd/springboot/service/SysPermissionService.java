@@ -3,6 +3,8 @@ package com.ldd.springboot.service;
 import com.ldd.springboot.entity.SysPermission;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Set;
+
 /**
  * <p>
  * 资源表 服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysPermissionService extends IService<SysPermission> {
 
+   boolean needInterceptor (String requestURI);
 }

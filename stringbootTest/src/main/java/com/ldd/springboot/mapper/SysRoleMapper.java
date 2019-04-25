@@ -2,6 +2,9 @@ package com.ldd.springboot.mapper;
 
 import com.ldd.springboot.entity.SysRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -11,6 +14,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author liujian
  * @since 2019-04-25
  */
+@Mapper
 public interface SysRoleMapper extends BaseMapper<SysRole> {
+
+    List<SysRole> listSysRoleByRoleIds(String [] RoleIds);
 
 }
