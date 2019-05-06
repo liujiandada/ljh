@@ -16,4 +16,6 @@ import java.util.Set;
 public interface SysPermissionService extends IService<SysPermission> {
 
    boolean needInterceptor (String requestURI);
+
+   Set<String> listPermissionURLByName(String userName);
 }

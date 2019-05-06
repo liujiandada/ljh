@@ -46,12 +46,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 根据用户名查询资源集合
+     * 根据用户名查询角色集合
      * @param userName
      * @return
      */
     @Override
-    public Set<String> listPermissionURLByName(String userName) {
+    public List<SysRole> listRoleByName(String userName) {
         Set<String> stringSet= new HashSet<>();
         User user=userMapper.findByUserName(userName);
         List<UserRole> userRoleList=userRoleMapper.findByUserId(user.getUserId());
@@ -60,10 +60,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             strRoleIds[i]=String.valueOf(userRoleList.get(i).getRoleId());
         }
         List<SysRole> sysRoleList=sysRoleMapper.listSysRoleByRoleIds(strRoleIds);
-        for (SysRole sysRole: sysRoleList) {
-//            sysRole.get
-        }
-        return null;
+        return sysRoleList;
     }
 
 }

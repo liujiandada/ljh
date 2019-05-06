@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +29,9 @@ import java.util.Set;
 public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements SysPermissionService {
 
     @Resource
+    UserMapper userMapper;
+
+    @Resource
     SysPermissionMapper sysPermissionMapper;
 
 
@@ -40,6 +44,22 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     public boolean needInterceptor(String requestURI) {
         List<SysPermission> permissionList=sysPermissionMapper.selectByUrl(new String[]{requestURI});
         return permissionList == null || permissionList.size()<=0 ? true : false;
+    }
+
+    /**
+     * 根据用户名查询资源集合
+     * @param userName
+     * @return
+     */
+    @Override
+    public Set<String> listPermissionURLByName(String userName) {
+        Set<String> stringSet = new HashSet<>();
+        User user=userMapper.findByUserName(userName);
+        List<SysPermission> sysPermissionList = sysPermissionMapper.listPermissionByUserIds(new String [] {String.valueOf(user.getUserId())});
+        for (SysPermission sysPermission :sysPermissionList) {
+            stringSet.add(sysPermission.getPermission());
+        }
+        return stringSet;
     }
 
 }

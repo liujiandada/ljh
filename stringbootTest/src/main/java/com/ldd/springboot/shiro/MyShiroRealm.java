@@ -71,7 +71,7 @@ public class MyShiroRealm extends AuthorizingRealm {
 
         String username = (String)token.getPrincipal();
 
-        User user = userService.findByUsername(username);
+        User user = userService.findByUserName(username);
 
         if (user == null) { //用户不存在
             throw new AuthenticationException();

@@ -30,5 +30,17 @@
             #{urls}
         </foreach>
     </select>
+    <select id="listPermissionByUserIds" resultType="com.ldd.springboot.entity.SysPermission">
+        SELECT <include refid="Base_Column_List"/> FROM
+        sys_permission
+        where PERM_ID IN
+        (SELECT PERM_ID FROM
+        role_permission
+        where ROLE_ID=(SELECT ROLE_ID FROM
+        user_role WHERE USER_ID IN
+        <foreach collection="array" index="index" item="userIds" open="(" separator="," close=")">
+            #{userIds}
+        </foreach>))
+    </select>
 
 </mapper>

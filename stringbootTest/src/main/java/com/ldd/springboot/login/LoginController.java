@@ -1,6 +1,7 @@
 package com.ldd.springboot.login;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.ldd.springboot.entity.vo.VueLoginInfoVo;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
 
 @Controller
 public class LoginController {
@@ -50,13 +50,15 @@ public class LoginController {
 
     @RequestMapping( value = "/login", method = RequestMethod.POST ,produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public Result login(HttpServletRequest request,@Valid  @RequestBody VueLoginInfoVo loginInfoVo, Map<String, Object> map){
+    public Result login(HttpServletRequest request,@Valid  @RequestBody VueLoginInfoVo loginInfoVo){
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(loginInfoVo.getUsername(), loginInfoVo.getPassword());
 
         try {
             subject.login(token);
-            return ResultFactory.buildSuccessResult("登陆成功。");
+            HttpSession session=request.getSession();
+
+            return ResultFactory.buildSuccessResult("登陆成功");
         } catch (IncorrectCredentialsException e) {
             return ResultFactory.buildFailResult("密码错误");
         } catch (LockedAccountException e) {

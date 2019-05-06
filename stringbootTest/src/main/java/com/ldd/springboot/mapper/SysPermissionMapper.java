@@ -19,4 +19,10 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
 
     List<SysPermission> selectByUrl(String [] urls);
 
+    /**
+     * 根据用户ID查询资源集合
+     * @param userIds
+     * @return
+     */
+    List<SysPermission> listPermissionByUserIds(String [] userIds);
 }

@@ -4,17 +4,14 @@ import com.ldd.springboot.service.SysPermissionService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.filter.PathMatchingFilter;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.util.HashSet;
 import java.util.Set;
 
-//FormAuthenticationFilter
 
 public class URLPathMatchingFilter extends FormAuthenticationFilter {
 
@@ -24,15 +21,16 @@ public class URLPathMatchingFilter extends FormAuthenticationFilter {
     @Override
     public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue)
             throws Exception {
+
         String requestURI = getPathWithinApplication(request);
 
 		System.out.println("requestURI:" + requestURI);
 
         Subject subject = SecurityUtils.getSubject();
+
         // 如果没有登录，就跳转到登录页面
         if (!subject.isAuthenticated()) {
-//            WebUtils.issueRedirect(request, response, "/login");
-            return false;
+            return true;
         }
 
         // 看看这个路径权限里有没有维护，如果没有维护，一律放行
@@ -50,7 +48,6 @@ public class URLPathMatchingFilter extends FormAuthenticationFilter {
                     break;
                 }
             }
-
             if (hasPermission)
                 return true;
             else {
