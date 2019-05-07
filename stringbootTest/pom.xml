@@ -24,6 +24,20 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <!--去除默认日志-->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--加入日志-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+            <version>2.1.1.RELEASE</version>
         </dependency>
 
         <!--thymeleaf的支持-->
@@ -181,6 +195,7 @@
             <artifactId>cglib</artifactId>
             <version>2.2.2</version>
         </dependency>
+
     </dependencies>
 
     <build>
