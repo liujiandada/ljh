@@ -29,38 +29,59 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     UserMapper userMapper;
 
     @Resource
-    UserRoleMapper userRoleMapper;
-
-    @Resource
     SysRoleMapper sysRoleMapper;
-
-    @Resource
-    RolePermissionMapper rolePermissionMapper;
 
     @Resource
     SysPermissionMapper sysPermissionMapper;
 
 
+    /**
+     * 根据用户名查询用户
+     * @param username
+     * @return
+     */
     public User findByUserName(String username){
         return userMapper.findByUserName(username);
     }
 
+
     /**
-     * 根据用户名查询角色集合
-     * @param userName
+     * 根据UserId 查询用户详情
+     * @param userId
      * @return
      */
-    @Override
-    public List<SysRole> listRoleByName(String userName) {
-        Set<String> stringSet= new HashSet<>();
-        User user=userMapper.findByUserName(userName);
-        List<UserRole> userRoleList=userRoleMapper.findByUserId(user.getUserId());
-        String [] strRoleIds = new String[userRoleList.size()];
-        for (int i=0 ; i<userRoleList.size() ; i++) {
-            strRoleIds[i]=String.valueOf(userRoleList.get(i).getRoleId());
+    public User findByUserId(Long userId){
+        User user = userMapper.selectById(userId);
+        if(user != null){
+            List<SysRole> roleList = sysRoleMapper.listSysRoleByRoleId(userId);
+            if(roleList != null && roleList.size() > 0){
+                user.setRoleList(roleList);
+            }
+            List<SysPermission> permissions = sysPermissionMapper.listPermissionByType(userId);
+            if(permissions !=null && permissions.size() > 0){
+                user.setPermissions(permissions);
+            }
+            List<SysPermission> authMenu= recursion(userId,0l);
+
+            if(authMenu != null && authMenu.size() > 0){
+                user.setAuthMenu(authMenu);
+            }
         }
-        List<SysRole> sysRoleList=sysRoleMapper.listSysRoleByRoleIds(strRoleIds);
-        return sysRoleList;
+        return user;
+    }
+
+    private List<SysPermission> recursion( Long userId, Long parentId){
+
+        List<SysPermission> sysPermissionList = sysPermissionMapper.listMenuByParentId(userId,parentId);
+        if(sysPermissionList != null && sysPermissionList.size()>0){
+            for (SysPermission sysPermission: sysPermissionList) {
+                List<SysPermission> List = recursion(userId,sysPermission.getPermId());
+                if(List != null && List.size()>0){
+                    sysPermission.setChild(List);
+                }
+            }
+        }
+        return sysPermissionList;
     }
 
 }

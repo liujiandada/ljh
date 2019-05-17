@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import javax.servlet.Filter;
 
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -43,21 +45,30 @@ public class ShiroConfig {
     @Bean
     public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
         System.out.println("ShiroConfiguration.shirFilter()");
+        Map<String, Filter> cumstomfilterMap = new HashMap<>();
+        //自定义拦截器
+        cumstomfilterMap.put("url", getURLPathMatchingFilter());
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         //注意过滤器配置顺序 不能颠倒
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了，登出后跳转配置的loginUrl
         filterChainDefinitionMap.put("/logout", "logout");
+        filterChainDefinitionMap.put("/index", "anon");
         // 配置不会被拦截的链接 顺序判断
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/ajaxLogin", "anon");
         filterChainDefinitionMap.put("/api/login", "anon");
         filterChainDefinitionMap.put("/login", "anon");
-        filterChainDefinitionMap.put("/user/addUser", "anon");
-        //验证登录状态
-        filterChainDefinitionMap.put("/**", "authc");
+        //注册
+        filterChainDefinitionMap.put("/api/Register", "anon");
+        //用户名查重
+        filterChainDefinitionMap.put("/api/userName", "anon");
 
+        //验证登录状态
+//        filterChainDefinitionMap.put("/**", "authc");
+        filterChainDefinitionMap.put("/**","url");
+        shiroFilterFactoryBean.setFilters(cumstomfilterMap);
 
         //配置shiro默认登录界面地址，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
         shiroFilterFactoryBean.setLoginUrl("/unauth");

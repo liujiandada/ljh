@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * <p>
@@ -83,6 +84,7 @@ public class User implements Serializable {
      * 注册时间
      */
     @TableField("CREATE_TIME")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     /**
@@ -98,10 +100,21 @@ public class User implements Serializable {
     private List<SysRole> roleList ;
 
     /**
-     * 用户菜单集合
+     * 用户资源集合
      */
     @TableField(exist = false)
     private List<SysPermission> sysPermissionList ;
 
+    /**
+     * 用户菜单集合
+     */
+    @TableField(exist = false)
+    private List<SysPermission> authMenu;
+
+    /**
+     * 用户权限集合
+     */
+    @TableField(exist = false)
+    private List<SysPermission> permissions;
 
 }

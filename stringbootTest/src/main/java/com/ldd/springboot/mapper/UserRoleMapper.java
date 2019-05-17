@@ -17,6 +17,11 @@ import java.util.List;
 @Mapper
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
+    /**
+     * 根据userId查询用户角色关联
+     * @param userId
+     * @return
+     */
     List<UserRole> findByUserId (Long userId);
 
 }

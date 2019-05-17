@@ -19,9 +19,9 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
 
     /**
      * 根据ID查询角色
-     * @param RoleIds
+     * @param userId
      * @return
      */
-    List<SysRole> listSysRoleByRoleIds(String [] RoleIds);
+    List<SysRole> listSysRoleByRoleId(Long userId);
 
 }

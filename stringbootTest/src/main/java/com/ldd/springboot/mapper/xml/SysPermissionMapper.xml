@@ -30,17 +30,22 @@
             #{urls}
         </foreach>
     </select>
-    <select id="listPermissionByUserIds" resultType="com.ldd.springboot.entity.SysPermission">
+    <select id="listPermissionByUserId" resultType="com.ldd.springboot.entity.SysPermission">
         SELECT <include refid="Base_Column_List"/> FROM
-        sys_permission
-        where PERM_ID IN
-        (SELECT PERM_ID FROM
-        role_permission
-        where ROLE_ID=(SELECT ROLE_ID FROM
-        user_role WHERE USER_ID IN
-        <foreach collection="array" index="index" item="userIds" open="(" separator="," close=")">
-            #{userIds}
-        </foreach>))
+        vi_user_role_permission
+        where USER_ID =#{userId}
+    </select>
+    <select id="listPermissionByType" resultType="com.ldd.springboot.entity.SysPermission">
+        SELECT PERMISSION FROM
+        vi_user_role_permission
+        where USER_ID = #{userId}
+        and RESOURCE_TYPE = 'button'
+    </select>
+    <select id="listMenuByParentId" resultType="com.ldd.springboot.entity.SysPermission">
+        SELECT <include refid="Base_Column_List"/> FROM vi_user_role_permission
+        where USER_ID = #{userId}
+        and RESOURCE_TYPE = 'menu'
+        and PARENT_ID= #{parentId}
     </select>
 
 </mapper>

@@ -1,19 +1,33 @@
 package com.ldd.springboot.filter;
 
+import com.ldd.springboot.entity.User;
 import com.ldd.springboot.service.SysPermissionService;
+import lombok.Data;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.filter.PathMatchingFilter;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.apache.shiro.web.filter.authc.UserFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.util.Set;
+@Data
+@Component
+@ConfigurationProperties(prefix = "shiro", ignoreUnknownFields = false)
+@PropertySource("classpath:shiro.properties")
+public class URLPathMatchingFilter extends  PathMatchingFilter {
 
-
-public class URLPathMatchingFilter extends FormAuthenticationFilter {
+    @Value("${shiro.anon}")
+    private String anon;
 
     @Autowired
     SysPermissionService sysPermissionService ;
@@ -25,12 +39,18 @@ public class URLPathMatchingFilter extends FormAuthenticationFilter {
         String requestURI = getPathWithinApplication(request);
 
 		System.out.println("requestURI:" + requestURI);
-
         Subject subject = SecurityUtils.getSubject();
-
+        String [] stranon=anon.split(",");
+        for(String str:stranon){
+            if(str.equals(requestURI)){
+                return true;
+            }
+        }
         // 如果没有登录，就跳转到登录页面
         if (!subject.isAuthenticated()) {
-            return true;
+            request.setAttribute("code","001");
+            request.getRequestDispatcher("/unauth").forward(request,response);
+            return false;
         }
 
         // 看看这个路径权限里有没有维护，如果没有维护，一律放行
@@ -39,8 +59,8 @@ public class URLPathMatchingFilter extends FormAuthenticationFilter {
             return true;
         } else {
             boolean hasPermission = false;
-            String userName = subject.getPrincipal().toString();
-            Set<String> permissionUrls = sysPermissionService.listPermissionURLByName(userName);
+            User user = (User)subject.getPrincipal();
+            Set<String> permissionUrls = sysPermissionService.listPermissionURLByName(user.getUserName());
             for (String url : permissionUrls) {
                 // 这就表示当前用户有这个权限
                 if (url.equals(requestURI)) {
@@ -51,10 +71,8 @@ public class URLPathMatchingFilter extends FormAuthenticationFilter {
             if (hasPermission)
                 return true;
             else {
-                UnauthorizedException ex = new UnauthorizedException("当前用户没有访问路径 " + requestURI + " 的权限");
-                subject.getSession().setAttribute("ex", ex);
-
-                WebUtils.issueRedirect(request, response, "/unauthorized");
+                request.setAttribute("code","002");
+                request.getRequestDispatcher("/unauth").forward(request,response);
                 return false;
             }
 

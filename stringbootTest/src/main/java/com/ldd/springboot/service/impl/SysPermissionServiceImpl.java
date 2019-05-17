@@ -43,7 +43,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     @Override
     public boolean needInterceptor(String requestURI) {
         List<SysPermission> permissionList=sysPermissionMapper.selectByUrl(new String[]{requestURI});
-        return permissionList == null || permissionList.size()<=0 ? true : false;
+        return permissionList == null || permissionList.size()<=0 ? false : true;
     }
 
     /**
@@ -55,11 +55,12 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     public Set<String> listPermissionURLByName(String userName) {
         Set<String> stringSet = new HashSet<>();
         User user=userMapper.findByUserName(userName);
-        List<SysPermission> sysPermissionList = sysPermissionMapper.listPermissionByUserIds(new String [] {String.valueOf(user.getUserId())});
+        List<SysPermission> sysPermissionList = sysPermissionMapper.listPermissionByUserId(user.getUserId());
         for (SysPermission sysPermission :sysPermissionList) {
-            stringSet.add(sysPermission.getPermission());
+            stringSet.add(sysPermission.getUrl());
         }
         return stringSet;
     }
+
 
 }

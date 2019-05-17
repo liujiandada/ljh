@@ -19,6 +19,5 @@ public interface UserService extends IService<User> {
 
     User findByUserName(String username);
 
-   List<SysRole> listRoleByName(String userName);
-
+    User findByUserId(Long userId);
 }
