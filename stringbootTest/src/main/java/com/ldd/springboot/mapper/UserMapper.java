@@ -1,8 +1,12 @@
 package com.ldd.springboot.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ldd.springboot.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -17,4 +21,5 @@ public interface UserMapper extends BaseMapper<User> {
 
     User findByUserName(String username);
 
+    List<User> selectAll(Page page , Map map);
 }

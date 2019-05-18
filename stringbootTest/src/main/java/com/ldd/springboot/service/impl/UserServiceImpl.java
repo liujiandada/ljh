@@ -1,5 +1,7 @@
 package com.ldd.springboot.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ldd.springboot.entity.SysPermission;
 import com.ldd.springboot.entity.SysRole;
 import com.ldd.springboot.entity.User;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -41,7 +44,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     public User findByUserName(String username){
-        return userMapper.findByUserName(username);
+        User user = userMapper.findByUserName(username);
+        return user;
     }
 
 
@@ -58,8 +62,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 user.setRoleList(roleList);
             }
             List<SysPermission> permissions = sysPermissionMapper.listPermissionByType(userId);
-            if(permissions !=null && permissions.size() > 0){
-                user.setPermissions(permissions);
+            for (SysPermission sysPermission: permissions) {
+                Set set =  new HashSet();
+                set.add(sysPermission.getPermission());
+                user.setPermissions(set);
             }
             List<SysPermission> authMenu= recursion(userId,0l);
 
@@ -69,6 +75,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         return user;
     }
+
+
+    public IPage<User> selectALL(Page page, Map map){
+        page.setRecords(userMapper.selectAll(page,map));
+        return page;
+    }
+
 
     private List<SysPermission> recursion( Long userId, Long parentId){
 

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -63,6 +64,12 @@ public class User implements Serializable {
     private Long orgId;
 
     /**
+     * 组织机构名称（0为无组织用户）
+     */
+    @TableField(exist = false)
+    private String orgName;
+
+    /**
      * 登录权限（0-不限制,1-APP）
      */
     @TableField("LOG_POWER")
@@ -115,6 +122,6 @@ public class User implements Serializable {
      * 用户权限集合
      */
     @TableField(exist = false)
-    private List<SysPermission> permissions;
+    private Set<String> permissions;
 
 }

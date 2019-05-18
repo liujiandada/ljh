@@ -19,12 +19,17 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        USER_ID, USER_NUM, USER_NAME, PASSWORD, SALT, ORG_ID, LOG_POWER, SEX, TELEPHONE, CREATE_TIME, LOCKED
+        USER_ID, USER_NUM, USER_NAME, PASSWORD, SALT, user.ORG_ID as ORG_ID, LOG_POWER, SEX, TELEPHONE, CREATE_TIME, LOCKED
     </sql>
 
     <select id="findByUserName" resultType="com.ldd.springboot.entity.User">
-        select <include refid="Base_Column_List"/> from user
+        select <include refid="Base_Column_List"/>  ,ORG_NAME from user
+        LEFT JOIN sys_organization on sys_organization.ORG_ID= user.ORG_ID
         where USER_NAME=#{username}
+    </select>
+    <select id="selectAll" resultType="com.ldd.springboot.entity.User">
+        select <include refid="Base_Column_List"/>  ,ORG_NAME from user
+        LEFT JOIN sys_organization on sys_organization.ORG_ID= user.ORG_ID
     </select>
 
 </mapper>
