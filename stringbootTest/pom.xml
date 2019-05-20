@@ -14,6 +14,9 @@
     <name>stringboot</name>
     <description>Demo project for Spring Boot</description>
 
+    <!--打包war包时开启-->
+    <!--<packaging>war</packaging>-->
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -21,6 +24,13 @@
     </properties>
 
     <dependencies>
+        <!--打war包需要干掉内置的tomcat-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -63,10 +73,12 @@
             <artifactId>jstl</artifactId>
         </dependency>
 
-        <!-- tomcat的支持.-->
+        <!-- 内置tomcat的支持jsp.-->
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
+            <!--打war包是需要加上下面这句===忽略内部tomcat-->
+            <!--<scope>provided</scope>-->
         </dependency>
 
         <!-- 开启热部署-->
@@ -213,6 +225,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--指定启动类-->
+                <configuration>
+                    <mainClass>com.ldd.springboot.StringbootApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

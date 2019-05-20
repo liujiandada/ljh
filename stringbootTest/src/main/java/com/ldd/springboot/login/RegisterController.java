@@ -63,7 +63,7 @@ public class RegisterController {
     @ResponseBody
     public Result existenceUserName(String userName){
         try {
-            User user = userService.findByUserName(userName);
+            User user = userService.findByUserName(userName.trim());
             if(user!=null){
                 return ResultFactory.buildSuccessResult("用户名已存在");
             }

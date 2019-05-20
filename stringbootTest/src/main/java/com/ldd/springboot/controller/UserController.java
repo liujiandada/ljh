@@ -10,7 +10,6 @@ import com.ldd.springboot.mapper.UserMapper;
 import com.ldd.springboot.result.Result;
 import com.ldd.springboot.result.ResultFactory;
 import com.ldd.springboot.service.UserService;
-import com.sun.deploy.net.HttpRequest;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
