@@ -58,7 +58,13 @@ public class LoginController {
         return ResultFactory.buidResult(500,"err","登陆失败");
     }
 
-
+    /**
+     * 登录功能
+     * @param request
+     * @param loginInfoVo
+     * @return
+     */
+    @CrossOrigin
     @RequestMapping( value = "/login", method = RequestMethod.POST ,produces = "application/json; charset=UTF-8")
     @ResponseBody
     public Result login(HttpServletRequest request,@Valid  @RequestBody VueLoginInfoVo loginInfoVo){
